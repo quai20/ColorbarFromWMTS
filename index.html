@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script src="dist/jquery-3.6.0.js"></script>
+    <script src="dist/dicopal.js"></script>
+</head>
+
+<body>
+    <input type="text" id="myInput" value="Hello World!">
+    <br><br>
+    <button id="myButton" onclick="myFunction()">Click Me!</button>
+    <br><br>
+    <div id="cbar" style="width: 40px; height: 200px; border: solid; border-width: 1px; position:relative;">
+        <a id="maxval" style="margin-left:45px; top:0px; position:absolute;"></a>
+        <a id="minval" style="margin-left:45px; bottom: 0px; position:absolute;"></a>
+    </div>
+    <script>
+        var resxv = null;
+        var resvg = null;
+        const url = "https://wmts.marine.copernicus.eu/teroWmts/INSITU_GLO_PHY_TS_OA_NRT_013_002/cmems_obs-ins_glo_phy-temp-sal_nrt_oa_P1M_202411?request=GetCapabilities&service=WMS"
+
+        const myFunction = async () => {
+            const input = document.getElementById("myInput").value;
+            console.log(url);
+            const res = await getData(url);
+            const resx = xml2json(res)
+            resvg = resx['Capabilities']['Contents']['Layer'];
+            var i=0;
+            for (i = 0; i < resvg.length+1; i++) {
+                if(i==resvg.length){
+                    alert("Variable not found, default cmap");
+                    i=0;
+                    break;
+                }
+                if(resvg[i]['ows:Metadata']['VariableInformation']['Id'] == input){
+                    break;
+                }                
+            }            
+            resxv = resx['Capabilities']['Contents']['Layer'][i]['ows:Metadata']['VariableInformation']
+            console.log(resxv);
+            buildCbar(resxv['Colormap'].charAt(0).toUpperCase() + resxv['Colormap'].slice(1),
+                parseFloat(resxv['MinimumValue']).toFixed(2),
+                parseFloat(resxv['MaximumValue']).toFixed(2));
+        }
+
+        function getData(ajaxurl) {
+            return $.ajax({
+                url: ajaxurl,
+                type: 'GET',
+            });
+        };
+
+        function xml2json(srcDOM) {
+            let children = [...srcDOM.children];
+
+            // base case for recursion. 
+            if (!children.length) {
+                return srcDOM.innerHTML
+            }
+
+            // initializing object to be returned. 
+            let jsonResult = {};
+
+            for (let child of children) {
+
+                // checking is child has siblings of same name. 
+                let childIsArray = children.filter(eachChild => eachChild.nodeName === child.nodeName).length > 1;
+
+                // if child is array, save the values as array, else as strings. 
+                if (childIsArray) {
+                    if (jsonResult[child.nodeName] === undefined) {
+                        jsonResult[child.nodeName] = [xml2json(child)];
+                    } else {
+                        jsonResult[child.nodeName].push(xml2json(child));
+                    }
+                } else {
+                    jsonResult[child.nodeName] = xml2json(child);
+                }
+            }
+
+            return jsonResult;
+        }
+
+        function buildCbar(colorname, minval, maxval) {
+
+            var colorlist = dicopal.getColors(colorname, 10)
+            const cbar = document.getElementById('cbar');
+            console.log(colorlist.reverse().join(','));
+            cbar.style.background = 'linear-gradient(0deg,' + colorlist.reverse().join(',') + ')';
+
+            const mina = document.getElementById('minval');
+            mina.innerHTML = minval;
+
+            const maxa = document.getElementById('maxval');
+            maxa.innerHTML = maxval;
+            maxa.style.float = 'right';
+            maxa.style.marginRight = '10px';
+
+        }
+
+    </script>
+</body>
+
+</html>
