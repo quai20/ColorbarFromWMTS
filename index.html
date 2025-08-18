@@ -8,6 +8,14 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <script src="dist/jquery-3.6.0.js"></script>
     <script src="dist/dicopal.js"></script>
+    <script>
+        dicopal.addPalette({
+        type: 'sequential',
+        name: 'Rainbow',
+        colors: ['#6600FF','#004EFF','#00D5FF','#00FFB2','#88FF00','#FFF600','#FFA400','#FF0002'],
+        provider: 'CustomPalette'
+        }); 
+    </script>
 </head>
 
 <body>
@@ -88,7 +96,7 @@
 
         function buildCbar(colorname, minval, maxval) {
 
-            var colorlist = dicopal.getColors(colorname, 10)
+            var colorlist = dicopal.getSequentialColors(colorname, 10)
             const cbar = document.getElementById('cbar');
             console.log(colorlist.reverse().join(','));
             cbar.style.background = 'linear-gradient(0deg,' + colorlist.reverse().join(',') + ')';
