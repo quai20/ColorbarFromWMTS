@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Page Title</title>
+    <title>WMTS CMEMS : From GetCapabilities to Colorbar</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <script src="dist/jquery-3.6.0.js"></script>
     <script src="dist/dicopal.js"></script>
@@ -19,9 +19,11 @@
 </head>
 
 <body>
-    <input type="text" id="myInput" value="Hello World!">
+    <a>WMTS CMEMS : From GetCapabilities to Colorbar</a>
     <br><br>
-    <button id="myButton" onclick="myFunction()">Click Me!</button>
+    <input type="text" id="myInput" value="Variable id (e.g. TEMP)">
+    <br><br>
+    <button id="myButton" onclick="genCmap()">Gen Cmap</button>
     <br><br>
     <div id="cbar_out" style="width: 120px; height: 264px; position:relative;">
         <div id="cbar" style="width: 37px; height: 264px; left: 0px; position:relative; border: solid; border-width: 1px;"></div>
@@ -34,7 +36,7 @@
         var resvg = null;
         const url = "https://wmts.marine.copernicus.eu/teroWmts/INSITU_GLO_PHY_TS_OA_NRT_013_002/cmems_obs-ins_glo_phy-temp-sal_nrt_oa_P1M_202411?request=GetCapabilities&service=WMS"
 
-        const myFunction = async () => {
+        const genCmap = async () => {
             const input = document.getElementById("myInput").value;
             console.log(url);
             const res = await getData(url);
