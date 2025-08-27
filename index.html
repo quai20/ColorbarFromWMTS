@@ -23,9 +23,11 @@
     <br><br>
     <button id="myButton" onclick="myFunction()">Click Me!</button>
     <br><br>
-    <div id="cbar" style="width: 40px; height: 200px; border: solid; border-width: 1px; position:relative;">
-        <a id="maxval" style="margin-left:45px; top:0px; position:absolute;"></a>
-        <a id="minval" style="margin-left:45px; bottom: 0px; position:absolute;"></a>
+    <div id="cbar_out" style="width: 120px; height: 264px; position:relative;">
+        <div id="cbar" style="width: 37px; height: 264px; left: 0px; position:relative; border: solid; border-width: 1px;"></div>
+        <a id="maxval" style="margin-left:45px; top:0px; position:absolute; font-size: small;"></a>
+        <a id="minval" style="margin-left:45px; bottom: 0px; position:absolute; font-size: small;"></a>
+        <a id="clabel" style="margin-left:85px; top: 20px; height:264px; position:absolute; font-size: small; writing-mode: vertical-rl; text-orientation: mixed;"></a>
     </div>
     <script>
         var resxv = null;
@@ -53,7 +55,9 @@
             console.log(resxv);
             buildCbar(resxv['Colormap'].charAt(0).toUpperCase() + resxv['Colormap'].slice(1),
                 parseFloat(resxv['MinimumValue']).toFixed(2),
-                parseFloat(resxv['MaximumValue']).toFixed(2));
+                parseFloat(resxv['MaximumValue']).toFixed(2),
+                resxv['Name'],
+                resxv['Unit']);
         }
 
         function getData(ajaxurl) {
@@ -94,7 +98,7 @@
             return jsonResult;
         }
 
-        function buildCbar(colorname, minval, maxval) {
+        function buildCbar(colorname, minval, maxval, clabel, unit) {
 
             var colorlist = dicopal.getSequentialColors(colorname, 10)
             const cbar = document.getElementById('cbar');
@@ -108,6 +112,10 @@
             maxa.innerHTML = maxval;
             maxa.style.float = 'right';
             maxa.style.marginRight = '10px';
+
+            const clabela = document.getElementById('clabel');
+            console.log(clabel + ' (' + unit + ')');
+            clabela.innerHTML = String(clabel + ' (' + unit + ')');
 
         }
 
