@@ -21,6 +21,7 @@
 <body>
     <a>WMTS CMEMS : From GetCapabilities to Colorbar</a>
     <br><br>
+    <input type="text" id="myURL" value="WMS GetCapabilities URL">
     <input type="text" id="myInput" value="Variable id (e.g. TEMP)">
     <br><br>
     <button id="myButton" onclick="genCmap()">Gen Cmap</button>
@@ -34,7 +35,7 @@
     <script>
         var resxv = null;
         var resvg = null;
-        const url = "https://wmts.marine.copernicus.eu/teroWmts/INSITU_GLO_PHY_TS_OA_NRT_013_002/cmems_obs-ins_glo_phy-temp-sal_nrt_oa_P1M_202603?request=GetCapabilities&service=WMS"
+        const url = document.getElementById("myURL").value;
 
         const genCmap = async () => {
             const input = document.getElementById("myInput").value;
